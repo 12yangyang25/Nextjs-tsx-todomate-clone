@@ -5,12 +5,12 @@ import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function FriendsList() {
   const [listState, setList] = useState(["Me"]);
-  const counter = 0;
 
   function handleAppend() {
     //친구 추가
-    setList([...listState, "new"]);
+    setList([...listState, "New"]);
   }
+
   return (
     <Wrapper>
       {listState.map((list) => {
@@ -36,6 +36,7 @@ const Person = styled.div`
   flex-direction: column;
   justify-content: center;
   border: 1px solid black;
+  font-weight: 600;
   border-radius: 50%;
   height: 30px;
   width: 30px;

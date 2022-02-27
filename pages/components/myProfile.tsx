@@ -10,4 +10,5 @@ const Wrapper = styled.div`
   font-weight: 600;
   font-size: 30px;
   margin: 10px;
+  margin-top: 50px;
 `;
