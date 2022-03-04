@@ -7,7 +7,7 @@ import TodoList from "./todoList";
 const week: string[] = ["일", "월", "화", "수", "목", "금", "토"];
 type DateArray = { date: number; day: number };
 
-export default function Schedule() {
+export default function Schedule(prop: { undoneTask: number }) {
   let curDate = new Date();
   let curYear = curDate.getFullYear();
   let curMonth = curDate.getMonth() + 1;
@@ -44,7 +44,7 @@ export default function Schedule() {
               return (
                 <DayofWeek>
                   {/* 해당 날짜의 투두리스트 갯수가 나타나도록 처리 */}
-                  <div>V</div>
+                  <div>{prop.undoneTask}</div>
                   <div>{Days.date}</div>
                 </DayofWeek>
               );
@@ -57,7 +57,7 @@ export default function Schedule() {
                 if (Days.date != -1) {
                   return (
                     <DayofMonth>
-                      <div>V</div>
+                      <div>{prop.undoneTask}</div>
                       <div>{Days.date}</div>
                     </DayofMonth>
                   );

@@ -1,27 +1,34 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, Dispatch } from "react";
 import styled from "styled-components";
 import { faCalendarPlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Schedule from "./schedule";
 
-export default function TodoList() {
-  type listType = { text: string; id: number };
+export default function TodoList(prop: {
+  undoneTask: number;
+  setCount: (num: number) => void;
+}) {
+  type listType = { text: string; id: number; done: false };
 
   const [todoList, setTodo] = useState<listType[]>([]);
   const [text, setText] = useState<string>("");
-  const countTodo = useRef<number>(0);
+  const todoId = useRef<number>(0);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
   };
 
   function handleAppend() {
-    countTodo.current === 0
-      ? setTodo([{ text: text, id: countTodo.current }])
-      : setTodo([...todoList, { text: text, id: countTodo.current }]);
-    countTodo.current++;
+    todoId.current === 0
+      ? setTodo([{ text: text, id: todoId.current, done: false }])
+      : setTodo([...todoList, { text: text, id: todoId.current, done: false }]);
+    todoId.current++;
+
     setText("");
-    console.log(todoList);
   }
+
+  const undoneTasks: listType[] = todoList.filter((todo) => !todo.done);
+  prop.setCount(undoneTasks.length);
 
   return (
     <Wrapper>

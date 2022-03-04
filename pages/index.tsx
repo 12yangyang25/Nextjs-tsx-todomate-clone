@@ -8,8 +8,14 @@ import MyProfile from "./components/myProfile";
 import Schedule from "./components/schedule";
 import TodoList from "./components/todoList";
 import styled from "styled-components";
+import { useState } from "react";
 
 const Home: NextPage = () => {
+  const [todoCount, setCount] = useState(0);
+  const handleCount = (num: number) => {
+    setCount(num);
+  };
+
   return (
     <>
       <NavWrapper>
@@ -19,9 +25,9 @@ const Home: NextPage = () => {
         <div>
           <FriendsList />
           <MyProfile />
-          <Schedule />
+          <Schedule undoneTask={todoCount} />
         </div>
-        <TodoList />
+        <TodoList undoneTask={todoCount} setCount={handleCount} />
       </Wrapper>
     </>
   );
@@ -36,8 +42,6 @@ const Wrapper = styled.div`
 const NavWrapper = styled.div`
   height: 100px;
   background: mistyrose;
-  font-family: "Noto Sans KR", sans-serif;
-  font-family: "Outfit", sans-serif;
 `;
 
 export default Home;
