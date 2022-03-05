@@ -1,20 +1,21 @@
 import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
-import Navigationbar from "./components/navigationBar";
-import FriendsList from "./components/friendsList";
-import MyProfile from "./components/myProfile";
-import Schedule from "./components/schedule";
-import TodoList from "./components/todoList";
-import styled from "styled-components";
 import { useState } from "react";
+import styled from "styled-components";
+import FriendsList from "../src/home/components/friendsList";
+import MyProfile from "../src/home/components/myProfile";
+import Navigationbar from "../src/home/components/navigationBar";
+import Schedule from "../src/home/components/schedule";
+import TodoList from "../src/home/components/todoList";
+import { TodoStoreType } from "../src/store/todolist_store";
 
 const Home: NextPage = () => {
   const [todoCount, setCount] = useState(0);
   const handleCount = (num: number) => {
     setCount(num);
   };
+
+  const [selectedDate, setSelectedDate] = useState(new Date().getDate());
+  const [todoListStore, setTodoListStore] = useState<TodoStoreType>({});
 
   return (
     <>
@@ -25,9 +26,20 @@ const Home: NextPage = () => {
         <div>
           <FriendsList />
           <MyProfile />
-          <Schedule undoneTask={todoCount} />
+          <Schedule
+            undoneTask={todoCount}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+            todoListStore={todoListStore}
+          />
         </div>
-        <TodoList undoneTask={todoCount} setCount={handleCount} />
+        <TodoList
+          undoneTask={todoCount}
+          setCount={handleCount}
+          selectedDate={selectedDate}
+          todoListStore={todoListStore}
+          setTodoListStore={setTodoListStore}
+        />
       </Wrapper>
     </>
   );
