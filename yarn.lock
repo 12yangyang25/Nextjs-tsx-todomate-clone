@@ -206,9 +206,10 @@
   dependencies:
     "@fortawesome/fontawesome-common-types" "^0.3.0"
 
-"@fortawesome/react-fontawesome@fortawesome/react-fontawesome":
+"@fortawesome/react-fontawesome@^0.1.17":
   version "0.1.17"
-  resolved "git+ssh://git@github.com/fortawesome/react-fontawesome.git#83a50e03a880191ac5fe9fc84d513667ff6e7173"
+  resolved "https://registry.yarnpkg.com/@fortawesome/react-fontawesome/-/react-fontawesome-0.1.17.tgz#06fc06cb1a721e38e5b50b4a1cb851e9b9c77d7a"
+  integrity sha512-dX43Z5IvMaW7fwzU8farosYjKNGfRb2HB/DgjVBHeJZ/NSnuuaujPPx0YOdcAq+n3mqn70tyCde2HM1mqbhiuw==
   dependencies:
     prop-types "^15.8.1"
 
