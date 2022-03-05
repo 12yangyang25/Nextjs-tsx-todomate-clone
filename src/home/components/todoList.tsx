@@ -1,78 +1,12 @@
 import { faCalendarPlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useRef, useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import { TodoType } from "../../model/list-type";
-import { TodoStoreType } from "../../store/todolist_store";
+import useTodoListStore, { TodoListProps } from "./useTodoListStore";
 
-// export default function TodoList(prop: {
-//   undoneTask: number;
-//   setCount: (num: number) => void;
-// }) {
-//
-// const TodoListConst:React.FC<TodoListProps> = () => {
-// }
-
-type TodoListProps = {
-  undoneTask: number;
-  setCount: (num: number) => void;
-  selectedDate: number;
-  todoListStore: TodoStoreType;
-  setTodoListStore: (store: TodoStoreType) => void;
-};
-
-export default function TodoList({
-  setCount,
-  selectedDate,
-  todoListStore,
-  setTodoListStore,
-}: TodoListProps) {
-  const [text, setText] = useState<string>("");
-  const todoId = useRef<number>(0);
-
-  /// OGH: todo list store
-  const todoList = todoListStore[selectedDate] ?? [];
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setText(e.target.value);
-  };
-
-  function handleAppend() {
-    const newId = todoId.current;
-    todoId.current++;
-    const newTodoListStore = {
-      ...todoListStore,
-    };
-    newTodoListStore[selectedDate] = [
-      ...todoList,
-      { text: text, id: newId, done: false },
-    ];
-    setTodoListStore(newTodoListStore);
-    setText("");
-  }
-  function handleCheck(index: number, done: boolean) {
-    todoList[index].done = done;
-    const newTodoListStore = {
-      ...todoListStore,
-    };
-    newTodoListStore[selectedDate] = [...todoList];
-    setTodoListStore(newTodoListStore);
-  }
-  function handleRemove(index: number) {
-    const removedTodoList = todoList.filter(
-      (remove) => remove.id !== todoList[index].id
-    );
-    const newTodoListStore = {
-      ...todoListStore,
-    };
-    newTodoListStore[selectedDate] = removedTodoList;
-    setTodoListStore(newTodoListStore);
-  }
-
-  const undoneTasks: TodoType[] = todoList.filter((todo) => !todo.done);
-  setCount(undoneTasks.length);
-
-  console.log(selectedDate);
+export default function TodoList(props: TodoListProps) {
+  const { text, onChange, handleAppend, handleRemove, handleCheck, todoList } =
+    useTodoListStore(props);
   return (
     <Wrapper>
       <FeedWrapper>Feed</FeedWrapper>

@@ -32,12 +32,16 @@ export default function Schedule({
     setState(!weeklyFlag);
   };
 
-  const { weekly, monthly } = getDaysArray(
-    weeklyFlag,
-    curDay,
-    curYear,
-    curMonth
-  );
+  const dateList = getDaysArray(weeklyFlag, curDay, curYear, curMonth);
+
+  var ScheduleWrapper = WeeklyWrapper;
+  var DateWrapper = DayofWeek;
+
+  if (!weeklyFlag) {
+    ScheduleWrapper = MonthlyWrapper;
+    DateWrapper = DayofMonth;
+  }
+
   return (
     <>
       <CurDateWrapper>
@@ -50,52 +54,31 @@ export default function Schedule({
         })}
       </WeekBar>
       <div>
-        {weeklyFlag ? (
-          <WeeklyWrapper>
-            {weekly.map((Days: DateArray, index) => {
-              return (
-                <DayofWeek
-                  key={`${Days}-${index} `}
-                  role={"button"}
-                  onClick={() => {
-                    setSelectedDate(Days.date);
-                  }}
-                  selected={selectedDate === Days.date}
-                >
-                  {/* 해당 날짜의 투두리스트 갯수가 나타나도록 처리 */}
-                  {/* 날짜는 Days.date 에 저장이 되있음. */}
-                  {/* 이 날의 투두 리스트 todoListStore[Days.date] */}
-                  {/* 이 날의 undoneTask 는 위의 투두리스트.filter (undone) */}
-                  <div>{getUndoneTask(todoListStore[Days.date])}</div>
-                  <div>{Days.date}</div>
-                </DayofWeek>
-              );
-            })}
-          </WeeklyWrapper>
-        ) : (
-          <>
-            <MonthlyWrapper>
-              {monthly.map((Days: DateArray) => {
-                if (Days.date != -1) {
-                  return (
-                    <DayofMonth
-                      role={"button"}
-                      onClick={() => {
-                        setSelectedDate(Days.date);
-                      }}
-                      selected={selectedDate === Days.date}
-                    >
-                      <div>{getUndoneTask(todoListStore[Days.date])}</div>
-                      <div>{Days.date}</div>
-                    </DayofMonth>
-                  );
-                } else {
-                  return <HandleNull></HandleNull>;
-                }
-              })}
-            </MonthlyWrapper>
-          </>
-        )}
+        <ScheduleWrapper>
+          {dateList.map((Days: DateArray, index) => {
+            if (Days.date == -1) {
+              return <HandleNull></HandleNull>;
+            }
+
+            return (
+              <DateWrapper
+                key={`${Days}-${index} `}
+                role={"button"}
+                onClick={() => {
+                  setSelectedDate(Days.date);
+                }}
+                selected={selectedDate === Days.date}
+              >
+                {/* 해당 날짜의 투두리스트 갯수가 나타나도록 처리 */}
+                {/* 날짜는 Days.date 에 저장이 되있음. */}
+                {/* 이 날의 투두 리스트 todoListStore[Days.date] */}
+                {/* 이 날의 undoneTask 는 위의 투두리스트.filter (undone) */}
+                <div>{getUndoneTask(todoListStore[Days.date])}</div>
+                <div>{Days.date}</div>
+              </DateWrapper>
+            );
+          })}
+        </ScheduleWrapper>
       </div>
     </>
   );
@@ -109,8 +92,7 @@ function getDaysArray(
 ) {
   const LastDate = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; //매달 마지막 날
 
-  let weekly: DateArray[] = [];
-  let monthly: DateArray[] = [];
+  let dateList: DateArray[] = [];
 
   let setdate = new Date();
   if (!weeklyFlag) {
@@ -119,31 +101,31 @@ function getDaysArray(
 
   if (weeklyFlag) {
     //주차별 배열 생성
-    weekly.push({ date: setdate.getDate(), day: setdate.getDay() });
+    dateList.push({ date: setdate.getDate(), day: setdate.getDay() });
 
-    fillDays(setdate, weekly, curDay, false);
+    fillDays(setdate, dateList, curDay, false);
 
     setdate = new Date();
 
     for (var i = 6; i > curDay; i--) {
       setdate.setDate(setdate.getDate() + 1);
-      weekly.push({ date: setdate.getDate(), day: setdate.getDay() });
+      dateList.push({ date: setdate.getDate(), day: setdate.getDay() });
     }
   } else {
     //월별 배열 생성
-    fillDays(setdate, monthly, LastDate[curMonth], true);
+    fillDays(setdate, dateList, LastDate[curMonth], true);
 
-    let firstDay = monthly[0].day;
-    let lastDay = monthly[LastDate[curMonth] - 1].day;
+    let firstDay = dateList[0].day;
+    let lastDay = dateList[LastDate[curMonth] - 1].day;
 
     for (i = 0; i < firstDay; i++) {
-      monthly.unshift({ date: -1, day: -1 });
+      dateList.unshift({ date: -1, day: -1 });
     }
     for (i = lastDay; i < 6; i++) {
-      monthly.push({ date: -1, day: -1 });
+      dateList.push({ date: -1, day: -1 });
     }
   }
-  return { weekly, monthly };
+  return dateList;
 }
 
 function getUndoneTask(todoList: TodoType[] | undefined) {
@@ -176,7 +158,7 @@ const CurDateWrapper = styled.span`
   font-weight: 600;
 `;
 
-const WeeklyWrapper = styled.div`
+const CalendarWrapper = styled.div`
   width: 350px;
   display: flex;
   flex-direction: row;
@@ -185,6 +167,7 @@ const WeeklyWrapper = styled.div`
   justify-content: space-between;
   box-sizing: border-box;
 `;
+const WeeklyWrapper = styled(CalendarWrapper)``;
 
 const WeekBar = styled.div`
   width: 350px;
@@ -198,15 +181,10 @@ const WeekBar = styled.div`
   font-weight: 600;
 `;
 
-const MonthlyWrapper = styled.div`
-  width: 350px;
-  display: flex;
-  flex-direction: row;
+const MonthlyWrapper = styled(CalendarWrapper)`
   flex-wrap: wrap;
   gap: 38px;
   padding-left: 15px;
-  justify-content: space-between;
-  box-sizing: border-box;
 `;
 
 const DayStyle = styled.div`
