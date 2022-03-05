@@ -1,9 +1,8 @@
 import { faCaretSquareDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { TodoType } from "../../model/list-type";
-import { TodoStoreType } from "../../store/todolist_store";
 
 const week: string[] = ["일", "월", "화", "수", "목", "금", "토"];
 type DateArray = { date: number; day: number };
@@ -12,15 +11,9 @@ type ScheduleProps = {
   undoneTask: number;
   selectedDate: number;
   setSelectedDate: (date: number) => void;
-  todoListStore: TodoStoreType;
 };
 
-export default function Schedule({
-  undoneTask,
-  selectedDate,
-  setSelectedDate,
-  todoListStore,
-}: ScheduleProps) {
+export default function Schedule({ undoneTask, ...otherProps }: ScheduleProps) {
   let curDate = new Date();
   let curYear = curDate.getFullYear();
   let curMonth = curDate.getMonth() + 1;
@@ -35,11 +28,9 @@ export default function Schedule({
   const dateList = getDaysArray(weeklyFlag, curDay, curYear, curMonth);
 
   var ScheduleWrapper = WeeklyWrapper;
-  var DateWrapper = DayofWeek;
 
   if (!weeklyFlag) {
     ScheduleWrapper = MonthlyWrapper;
-    DateWrapper = DayofMonth;
   }
 
   return (
@@ -59,28 +50,72 @@ export default function Schedule({
             if (Days.date == -1) {
               return <HandleNull></HandleNull>;
             }
-
             return (
-              <DateWrapper
-                key={`${Days}-${index} `}
-                role={"button"}
-                onClick={() => {
-                  setSelectedDate(Days.date);
-                }}
-                selected={selectedDate === Days.date}
-              >
-                {/* 해당 날짜의 투두리스트 갯수가 나타나도록 처리 */}
-                {/* 날짜는 Days.date 에 저장이 되있음. */}
-                {/* 이 날의 투두 리스트 todoListStore[Days.date] */}
-                {/* 이 날의 undoneTask 는 위의 투두리스트.filter (undone) */}
-                <div>{getUndoneTask(todoListStore[Days.date])}</div>
-                <div>{Days.date}</div>
-              </DateWrapper>
+              <DayPresenter
+                day={Days.date}
+                key={`daypresenter-${index}`}
+                weeklyFlag={weeklyFlag}
+                {...otherProps}
+              />
             );
           })}
         </ScheduleWrapper>
       </div>
     </>
+  );
+}
+
+type DayPresenterProps = {
+  day: number;
+  selectedDate: number;
+  setSelectedDate: (date: number) => void;
+  weeklyFlag: boolean;
+};
+function DayPresenter({
+  day,
+  selectedDate,
+  setSelectedDate,
+  weeklyFlag,
+}: DayPresenterProps) {
+  const [todoList, setTodoList] = useState<undefined | TodoType[]>(undefined);
+  const isLoaded = useRef<boolean>(false);
+  useEffect(() => {
+    if (!isLoaded.current) {
+      fetch(`http://127.0.0.1:3000/api/hello?date=${day}`, {
+        method: "get",
+      }).then(async (response) => {
+        // JSON: Javascript Object Notation
+        // {
+        //    key: value
+        // }
+        // [1, 2, 3]
+        const body = await response.json();
+        console.log(body);
+        isLoaded.current = true;
+        setTodoList(body.data);
+      }); // 암묵적으로 GET 메소드를 사용함.
+    }
+  });
+  var DateWrapper = DayofWeek;
+  if (!weeklyFlag) {
+    DateWrapper = DayofMonth;
+  }
+  return (
+    <DateWrapper
+      role={"button"}
+      onClick={() => {
+        setSelectedDate(day);
+      }}
+      selected={selectedDate === day}
+    >
+      {/* 해당 날짜의 투두리스트 갯수가 나타나도록 처리 */}
+      {/* 날짜는 Days.date 에 저장이 되있음. */}
+      {/* 이 날의 투두 리스트 todoListStore[Days.date] */}
+      {/* 이 날의 undoneTask 는 위의 투두리스트.filter (undone) */}
+
+      <div>{getUndoneTask(todoList)}</div>
+      <div>{day}</div>
+    </DateWrapper>
   );
 }
 

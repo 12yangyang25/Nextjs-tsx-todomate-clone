@@ -6,7 +6,6 @@ import MyProfile from "../src/home/components/myProfile";
 import Navigationbar from "../src/home/components/navigationBar";
 import Schedule from "../src/home/components/schedule";
 import TodoList from "../src/home/components/todoList";
-import { TodoStoreType } from "../src/store/todolist_store";
 
 const Home: NextPage = () => {
   const [todoCount, setCount] = useState(0);
@@ -15,7 +14,6 @@ const Home: NextPage = () => {
   };
 
   const [selectedDate, setSelectedDate] = useState(new Date().getDate());
-  const [todoListStore, setTodoListStore] = useState<TodoStoreType>({});
 
   return (
     <>
@@ -30,15 +28,12 @@ const Home: NextPage = () => {
             undoneTask={todoCount}
             selectedDate={selectedDate}
             setSelectedDate={setSelectedDate}
-            todoListStore={todoListStore}
           />
         </div>
         <TodoList
           undoneTask={todoCount}
           setCount={handleCount}
           selectedDate={selectedDate}
-          todoListStore={todoListStore}
-          setTodoListStore={setTodoListStore}
         />
       </Wrapper>
     </>

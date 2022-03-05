@@ -5,8 +5,9 @@ import styled from "styled-components";
 import useTodoListStore, { TodoListProps } from "./useTodoListStore";
 
 export default function TodoList(props: TodoListProps) {
-  const { text, onChange, handleAppend, handleRemove, handleCheck, todoList } =
-    useTodoListStore(props);
+  // const { text, onChange, handleAppend, handleRemove, handleCheck, todoList } =
+  //   useTodoListStore(props);
+  const { text, onChange, todoList, handleAppend } = useTodoListStore(props);
   return (
     <Wrapper>
       <FeedWrapper>Feed</FeedWrapper>
@@ -41,7 +42,7 @@ export default function TodoList(props: TodoListProps) {
                 type="checkbox"
                 onChange={(event) => {
                   const status = event.target.checked;
-                  handleCheck(index, status);
+                  // handleCheck(index, status);
                 }}
                 checked={todoList[index].done}
               />
@@ -50,7 +51,7 @@ export default function TodoList(props: TodoListProps) {
                 <FontAwesomeIcon
                   icon={faTrashCan}
                   fontSize="13px"
-                  onClick={() => handleRemove(index)}
+                  // onClick={() => handleRemove(index)}
                 />
               </TrashCanWrapper>
             </TodoWrapper>
