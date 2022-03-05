@@ -19,7 +19,6 @@ export default function handler(
   if (req.method?.toUpperCase() === "GET") {
     const date = req.query["date"] as string;
     const todoList = DailyTodoStore[date] ?? [];
-    console.log(date);
     res.status(200).json({
       length: todoList.length,
       data: todoList,
@@ -29,7 +28,6 @@ export default function handler(
     const todoList = DailyTodoStore[date] ?? [];
     const data = JSON.parse(req.body) as TodoType;
 
-    console.log(data);
     todoList.push(data);
     DailyTodoStore[date] = todoList;
     res.status(201).end();

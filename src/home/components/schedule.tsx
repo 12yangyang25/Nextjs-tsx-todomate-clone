@@ -81,7 +81,7 @@ function DayPresenter({
   const isLoaded = useRef<boolean>(false);
   useEffect(() => {
     if (!isLoaded.current) {
-      fetch(`http://127.0.0.1:3000/api/hello?date=${day}`, {
+      fetch(`/api/hello?date=${day}`, {
         method: "get",
       }).then(async (response) => {
         // JSON: Javascript Object Notation

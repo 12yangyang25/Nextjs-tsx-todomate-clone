@@ -17,7 +17,7 @@ export default function useTodoListStore({ selectedDate }: TodoListProps) {
 
   useEffect(() => {
     if (!isLoaded || previousDate.current != selectedDate) {
-      fetch(`http://127.0.0.1:3000/api/hello?date=${selectedDate}`, {
+      fetch(`/api/hello?date=${selectedDate}`, {
         method: "GET",
       }).then(async (response) => {
         const body = await response.json();
@@ -36,7 +36,7 @@ export default function useTodoListStore({ selectedDate }: TodoListProps) {
     const newTodo: TodoType = { text: text, id: newId, done: false };
     // {text: "안녕하세요", id: 0, done: false}
     // => http 통신으로 주고 받을 때, "{text:'안녕하세요',id:0,done:false"
-    fetch(`http://127.0.0.1:3000/api/hello?date=${selectedDate}`, {
+    fetch(`/api/hello?date=${selectedDate}`, {
       method: "POST",
       body: JSON.stringify(newTodo),
     }).then(async (response) => {
