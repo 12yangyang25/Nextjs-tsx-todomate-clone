@@ -220,15 +220,15 @@ const DayStyle = styled.div`
 `;
 
 type SelectedDateProps = {
-  selected: number;
+  selected: boolean;
 };
 
-const DayofWeek = styled(DayStyle)`
+const DayofWeek = styled(DayStyle)<SelectedDateProps>`
   gap: 10px;
   background-color: ${({ selected }) => (selected ? "red" : "transparent")};
 `;
 
-const DayofMonth = styled(DayStyle)`
+const DayofMonth = styled(DayStyle)<SelectedDateProps>`
   gap: 5px;
   background-color: ${({ selected }) => (selected ? "red" : "transparent")};
 `;

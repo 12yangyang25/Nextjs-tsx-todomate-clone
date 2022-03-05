@@ -11,8 +11,8 @@ import { TodoStoreType } from "../../store/todolist_store";
 // }) {
 //
 // const TodoListConst:React.FC<TodoListProps> = () => {
-
 // }
+
 type TodoListProps = {
   undoneTask: number;
   setCount: (num: number) => void;
@@ -45,7 +45,7 @@ export default function TodoList({
     };
     newTodoListStore[selectedDate] = [
       ...todoList,
-      { text: text, id: todoId.current, done: false },
+      { text: text, id: newId, done: false },
     ];
     setTodoListStore(newTodoListStore);
     setText("");
@@ -91,6 +91,15 @@ export default function TodoList({
         />
       </IconWrapper>
       <>
+        {
+          // todoListStore => "1일" : TodoType[]
+          //               => "2일" : TodoType[]
+          //                 todoListStore["선택한 날 "] => [
+          //                           {done, text, id}, {done, text, id}, {done, text, id},
+          //                           0                         1             2
+          //                           ]
+          // todoList = todoListStore["selectedDate"];
+        }
         {todoList.map((todo, index) => {
           return (
             <TodoWrapper key={`todolist-${index}-${todo.done}`}>
