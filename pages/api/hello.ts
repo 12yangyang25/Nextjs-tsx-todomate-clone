@@ -8,9 +8,9 @@ type Data = {
   data: TodoType[];
 };
 
-const DailyTodoStore: TodoStoreType = {
-  today: [{ done: false, id: 0, text: "hi" }],
-};
+var next_id = 0;
+
+const DailyTodoStore: TodoStoreType = {};
 
 export default function handler(
   req: NextApiRequest,
@@ -26,10 +26,37 @@ export default function handler(
   } else if (req.method?.toUpperCase() === "POST") {
     const date = req.query["date"] as string;
     const todoList = DailyTodoStore[date] ?? [];
-    const data = JSON.parse(req.body) as TodoType;
-
+    const data = req.body as TodoType;
+    if (data === undefined) {
+      return res.status(400).end();
+    }
+    data.id = next_id;
+    next_id++;
     todoList.push(data);
     DailyTodoStore[date] = todoList;
-    res.status(201).end();
+    res.status(201).json({
+      length: 1,
+      data: [data],
+    });
+  } else if (req.method?.toUpperCase() === "PUT") {
+    const date = req.query["date"] as string;
+    const todoList = DailyTodoStore[date] ?? [];
+    const data = (req.body as TodoType) ?? {};
+    const target = todoList.findIndex((todo) => todo.id == data.id);
+    if (target === -1) {
+      return res.status(404).end();
+    }
+    todoList[target] = data;
+    DailyTodoStore[date] = todoList;
+    res.status(200).json({
+      length: 1,
+      data: [data],
+    });
+  } else if (req.method?.toUpperCase() === "DELETE") {
+    const date = req.query["date"] as string;
+    const todoId = parseInt(req.query["todo_id"] as string);
+    const todoList = DailyTodoStore[date] ?? [];
+    DailyTodoStore[date] = todoList.filter((todo) => todo.id != todoId);
+    res.status(200).end();
   }
 }
