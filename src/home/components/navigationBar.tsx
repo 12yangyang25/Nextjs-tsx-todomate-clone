@@ -1,13 +1,15 @@
-import Styled, { StyledComponent } from "styled-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGratipay } from "@fortawesome/free-brands-svg-icons";
-import { faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
+import Styled from "styled-components";
 
 export default function Navigationbar() {
   return (
     <Wrapper>
-      <FontAwesomeIcon icon={faGratipay} color="black" fontSize="25px" />
+      <Link href={"alarm"} passHref>
+        <FontAwesomeIcon icon={faGratipay} color="black" fontSize="25px" />
+      </Link>
       <FontAwesomeIcon icon={faCalendarCheck} color="black" fontSize="25px" />
       <FontAwesomeIcon icon={faBars} color="black" fontSize="25px" />
     </Wrapper>

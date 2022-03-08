@@ -1,35 +1,13 @@
-import React, { useState, useRef, Dispatch } from "react";
-import styled from "styled-components";
 import { faCalendarPlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Schedule from "./schedule";
+import React from "react";
+import styled from "styled-components";
+import useTodoListStore, { TodoListProps } from "./useTodoListStore";
 
-export default function TodoList(prop: {
-  undoneTask: number;
-  setCount: (num: number) => void;
-}) {
-  type listType = { text: string; id: number; done: false };
-
-  const [todoList, setTodo] = useState<listType[]>([]);
-  const [text, setText] = useState<string>("");
-  const todoId = useRef<number>(0);
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setText(e.target.value);
-  };
-
-  function handleAppend() {
-    todoId.current === 0
-      ? setTodo([{ text: text, id: todoId.current, done: false }])
-      : setTodo([...todoList, { text: text, id: todoId.current, done: false }]);
-    todoId.current++;
-
-    setText("");
-  }
-
-  const undoneTasks: listType[] = todoList.filter((todo) => !todo.done);
-  prop.setCount(undoneTasks.length);
-
+export default function TodoList(props: TodoListProps) {
+  // const { text, onChange, handleAppend, handleRemove, handleCheck, todoList } =
+  //   useTodoListStore(props);
+  const { text, onChange, todoList, handleAppend } = useTodoListStore(props);
   return (
     <Wrapper>
       <FeedWrapper>Feed</FeedWrapper>
@@ -48,18 +26,32 @@ export default function TodoList(prop: {
         />
       </IconWrapper>
       <>
-        {todoList.map((todo) => {
+        {
+          // todoListStore => "1일" : TodoType[]
+          //               => "2일" : TodoType[]
+          //                 todoListStore["선택한 날 "] => [
+          //                           {done, text, id}, {done, text, id}, {done, text, id},
+          //                           0                         1             2
+          //                           ]
+          // todoList = todoListStore["selectedDate"];
+        }
+        {todoList.map((todo, index) => {
           return (
-            <TodoWrapper>
-              <input type="checkbox" />
+            <TodoWrapper key={`todolist-${index}-${todo.done}`}>
+              <input
+                type="checkbox"
+                onChange={(event) => {
+                  const status = event.target.checked;
+                  // handleCheck(index, status);
+                }}
+                checked={todoList[index].done}
+              />
               <div>{todo.text}</div>
               <TrashCanWrapper>
                 <FontAwesomeIcon
                   icon={faTrashCan}
                   fontSize="13px"
-                  onClick={() =>
-                    setTodo(todoList.filter((remove) => remove.id !== todo.id))
-                  }
+                  // onClick={() => handleRemove(index)}
                 />
               </TrashCanWrapper>
             </TodoWrapper>
