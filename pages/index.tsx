@@ -6,6 +6,12 @@ import MyProfile from "../src/home/components/myProfile";
 import Navigationbar from "../src/home/components/navigationBar";
 import Schedule from "../src/home/components/schedule";
 import TodoList from "../src/home/components/todoList";
+import useTodoListStore from "../src/home/components/useTodoListStore";
+
+const useAllTodoListStore = () => {
+  // useTodoListStore는 하루하루에대한 관리
+  // 지금 hook은 한달 혹은 1주일에 대한 관리.
+};
 
 const Home: NextPage = () => {
   const [todoCount, setCount] = useState(0);
@@ -14,6 +20,7 @@ const Home: NextPage = () => {
   };
 
   const [selectedDate, setSelectedDate] = useState(new Date().getDate());
+  const dummyState = useState<boolean>(false);
 
   return (
     <>
@@ -30,11 +37,7 @@ const Home: NextPage = () => {
             setSelectedDate={setSelectedDate}
           />
         </div>
-        <TodoList
-          undoneTask={todoCount}
-          setCount={handleCount}
-          selectedDate={selectedDate}
-        />
+        <TodoList renderParent={dummyState} wantedDate={selectedDate} />
       </Wrapper>
     </>
   );

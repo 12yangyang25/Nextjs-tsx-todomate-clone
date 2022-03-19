@@ -1,13 +1,23 @@
 import { faCalendarPlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import useTodoListStore, { TodoListProps } from "./useTodoListStore";
 
-export default function TodoList(props: TodoListProps) {
+type Props = {
+  wantedDate: number;
+  renderParent: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+};
+export default function TodoList({
+  wantedDate,
+  renderParent: [parentState, setParentState],
+}: Props) {
   // const { text, onChange, handleAppend, handleRemove, handleCheck, todoList } =
   //   useTodoListStore(props);
-  const { text, onChange, todoList, handleAppend } = useTodoListStore(props);
+  const ss = useState();
+  const { text, onChange, todoList, handleAppend } = useTodoListStore({
+    wantedDate,
+  });
   return (
     <Wrapper>
       <FeedWrapper>Feed</FeedWrapper>
@@ -22,7 +32,12 @@ export default function TodoList(props: TodoListProps) {
           icon={faCalendarPlus}
           fontSize="20px"
           color="black"
-          onClick={handleAppend}
+          onClick={() => {
+            console.log("Update todolist state");
+            handleAppend();
+            console.log("Update parent state");
+            setParentState(!parentState);
+          }}
         />
       </IconWrapper>
       <>
@@ -35,6 +50,7 @@ export default function TodoList(props: TodoListProps) {
           //                           ]
           // todoList = todoListStore["selectedDate"];
         }
+
         {todoList.map((todo, index) => {
           return (
             <TodoWrapper key={`todolist-${index}-${todo.done}`}>

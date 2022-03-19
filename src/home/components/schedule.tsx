@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { TodoType } from "../../model/list-type";
+import useTodoListStore from "./useTodoListStore";
 
 const week: string[] = ["일", "월", "화", "수", "목", "금", "토"];
 type DateArray = { date: number; day: number };
@@ -77,24 +78,8 @@ function DayPresenter({
   setSelectedDate,
   weeklyFlag,
 }: DayPresenterProps) {
-  const [todoList, setTodoList] = useState<undefined | TodoType[]>(undefined);
-  const isLoaded = useRef<boolean>(false);
-  useEffect(() => {
-    if (!isLoaded.current) {
-      fetch(`/api/hello?date=${day}`, {
-        method: "get",
-      }).then(async (response) => {
-        // JSON: Javascript Object Notation
-        // {
-        //    key: value
-        // }
-        // [1, 2, 3]
-        const body = await response.json();
-        console.log(body);
-        isLoaded.current = true;
-        setTodoList(body.data);
-      }); // 암묵적으로 GET 메소드를 사용함.
-    }
+  const { todoList } = useTodoListStore({
+    wantedDate: day,
   });
   var DateWrapper = DayofWeek;
   if (!weeklyFlag) {
