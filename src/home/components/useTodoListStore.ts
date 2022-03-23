@@ -28,8 +28,9 @@ export default function useTodoListStore({ wantedDate }: TodoListProps) {
 
   useEffect(() => {
     if (!isLoaded || previousDate.current != wantedDate) {
+      console.log(`refetch data for ${wantedDate}`);
       axios.get(`/api/hello?date=${wantedDate}`).then((response) => {
-        console.log(response.data);
+        console.log("refetch day", wantedDate, "data", response.data);
         // response.data => {length: 0, data: TodoType[]};
         const responseData: APIDataResponse = response.data;
         previousDate.current = wantedDate;

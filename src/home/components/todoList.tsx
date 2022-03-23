@@ -3,21 +3,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import styled from "styled-components";
 import useTodoListStore, { TodoListProps } from "./useTodoListStore";
+import { TodoType } from "../../model/list-type";
 
 type Props = {
   wantedDate: number;
-  renderParent: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+  selectedTodoStore: any;
 };
 export default function TodoList({
   wantedDate,
-  renderParent: [parentState, setParentState],
+  selectedTodoStore: selectedTdoStore,
 }: Props) {
   // const { text, onChange, handleAppend, handleRemove, handleCheck, todoList } =
   //   useTodoListStore(props);
   const ss = useState();
-  const { text, onChange, todoList, handleAppend } = useTodoListStore({
-    wantedDate,
-  });
+  const { todoList, text, onChange, handleAppend } = selectedTdoStore;
   return (
     <Wrapper>
       <FeedWrapper>Feed</FeedWrapper>
@@ -36,7 +35,6 @@ export default function TodoList({
             console.log("Update todolist state");
             handleAppend();
             console.log("Update parent state");
-            setParentState(!parentState);
           }}
         />
       </IconWrapper>

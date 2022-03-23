@@ -12,9 +12,14 @@ type ScheduleProps = {
   undoneTask: number;
   selectedDate: number;
   setSelectedDate: (date: number) => void;
+  selectedTodoStore: any;
 };
 
-export default function Schedule({ undoneTask, ...otherProps }: ScheduleProps) {
+export default function Schedule({
+  undoneTask,
+  selectedTodoStore,
+  ...otherProps
+}: ScheduleProps) {
   let curDate = new Date();
   let curYear = curDate.getFullYear();
   let curMonth = curDate.getMonth() + 1;
@@ -51,11 +56,13 @@ export default function Schedule({ undoneTask, ...otherProps }: ScheduleProps) {
             if (Days.date == -1) {
               return <HandleNull></HandleNull>;
             }
+
             return (
               <DayPresenter
                 day={Days.date}
                 key={`daypresenter-${index}`}
                 weeklyFlag={weeklyFlag}
+                selectedTodoList={selectedTodoStore.todoList}
                 {...otherProps}
               />
             );
@@ -66,21 +73,61 @@ export default function Schedule({ undoneTask, ...otherProps }: ScheduleProps) {
   );
 }
 
+// stateStore
+// stateStore = {
+//  treelevel1State: {},
+//  treelevel2State: {},
+// }
+// function hook() {
+//   const callerComponent = <div></div>;
+//   const componentOrder = 11;
+//   let retState;
+
+//   const treelevel = 3;
+//   if (componentOrder + comopnent.key 바꼈다.) {
+//     stateStore[treelevel].clear();
+//   }
+
+//   if (callerComponent.key) {
+//     const savedState = stateStore[callerComponet.key + comopnentOrder];
+//     if (savedState) {
+//       return savedState;
+//     } else {
+//       stateStore[callerComponent.key] = useTodoListStore();
+//       return stateStore[callerComponent.key];
+//     }
+//   } else {
+//     const savedState = stateStore[comopnentOrder];
+//     if (savedState) {
+//       return savedState;
+//     } else {
+//       stateStore[compoanentOrder] = useTodoListStore();
+//       return stateStore[componentOrder];
+//     }
+//   }
+// }
+
 type DayPresenterProps = {
   day: number;
   selectedDate: number;
   setSelectedDate: (date: number) => void;
   weeklyFlag: boolean;
+  selectedTodoList: TodoType[];
 };
+
 function DayPresenter({
   day,
   selectedDate,
   setSelectedDate,
   weeklyFlag,
+  selectedTodoList,
 }: DayPresenterProps) {
-  const { todoList } = useTodoListStore({
-    wantedDate: day,
-  });
+  let { todoList } = useTodoListStore({ wantedDate: day });
+  console.log(day, "from use todo list store", todoList.length);
+  if (selectedDate === day) {
+    todoList = selectedTodoList;
+    console.log(day, "from parent component", todoList.length);
+  }
   var DateWrapper = DayofWeek;
   if (!weeklyFlag) {
     DateWrapper = DayofMonth;

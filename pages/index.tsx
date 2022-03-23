@@ -20,7 +20,7 @@ const Home: NextPage = () => {
   };
 
   const [selectedDate, setSelectedDate] = useState(new Date().getDate());
-  const dummyState = useState<boolean>(false);
+  const selectedTodoStore = useTodoListStore({ wantedDate: selectedDate });
 
   return (
     <>
@@ -35,9 +35,14 @@ const Home: NextPage = () => {
             undoneTask={todoCount}
             selectedDate={selectedDate}
             setSelectedDate={setSelectedDate}
+            selectedTodoStore={selectedTodoStore}
+            key={`date-${selectedDate}`}
           />
         </div>
-        <TodoList renderParent={dummyState} wantedDate={selectedDate} />
+        <TodoList
+          wantedDate={selectedDate}
+          selectedTodoStore={selectedTodoStore}
+        />
       </Wrapper>
     </>
   );
