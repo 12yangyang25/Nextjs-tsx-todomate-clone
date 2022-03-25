@@ -29,6 +29,7 @@ export default function useTodoListStore({ wantedDate }: TodoListProps) {
   useEffect(() => {
     if (!isLoaded || previousDate.current != wantedDate) {
       console.log(`refetch data for ${wantedDate}`);
+      console.log("isLoaded가 false라 다시 호출되었음");
       axios.get(`/api/hello?date=${wantedDate}`).then((response) => {
         console.log("refetch day", wantedDate, "data", response.data);
         // response.data => {length: 0, data: TodoType[]};
@@ -53,6 +54,7 @@ export default function useTodoListStore({ wantedDate }: TodoListProps) {
       .then((response) => {
         console.log("post from todolist component");
         setLoaded(false);
+        console.log("inLoade의 값이 false로 변경됨");
       });
     setText("");
   }

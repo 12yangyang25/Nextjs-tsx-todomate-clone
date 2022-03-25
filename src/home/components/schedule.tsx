@@ -1,9 +1,9 @@
 import { faCaretSquareDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
 import { TodoType } from "../../model/list-type";
 import useTodoListStore from "./useTodoListStore";
+import scheduleStyle from "./style/scheduleStyle";
 
 const week: string[] = ["일", "월", "화", "수", "목", "금", "토"];
 type DateArray = { date: number; day: number };
@@ -14,6 +14,18 @@ type ScheduleProps = {
   setSelectedDate: (date: number) => void;
   selectedTodoStore: any;
 };
+
+const {
+  CurDateWrapper,
+  CalendarWrapper,
+  WeeklyWrapper,
+  WeekBar,
+  MonthlyWrapper,
+  DayStyle,
+  DayofWeek,
+  DayofMonth,
+  HandleNull,
+} = scheduleStyle();
 
 export default function Schedule({
   undoneTask,
@@ -219,65 +231,3 @@ function fillDays(
     }
   }
 }
-
-const CurDateWrapper = styled.span`
-  padding: 10px;
-  font-weight: 600;
-`;
-
-const CalendarWrapper = styled.div`
-  width: 350px;
-  display: flex;
-  flex-direction: row;
-  gap: 35px;
-  padding-left: 13px;
-  justify-content: space-between;
-  box-sizing: border-box;
-`;
-const WeeklyWrapper = styled(CalendarWrapper)``;
-
-const WeekBar = styled.div`
-  width: 350px;
-  display: flex;
-  flex-direction: row;
-  gap: 41px;
-  padding-left: 10px;
-  padding-top: 40px;
-  box-sizing: border-box;
-  justify-content: space-between;
-  font-weight: 600;
-`;
-
-const MonthlyWrapper = styled(CalendarWrapper)`
-  flex-wrap: wrap;
-  gap: 38px;
-  padding-left: 15px;
-`;
-
-const DayStyle = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 10px;
-  margin-top: 30px;
-  align-items: center;
-  box-sizing: border-box;
-`;
-
-type SelectedDateProps = {
-  selected: boolean;
-};
-
-const DayofWeek = styled(DayStyle)<SelectedDateProps>`
-  gap: 10px;
-  background-color: ${({ selected }) => (selected ? "red" : "transparent")};
-`;
-
-const DayofMonth = styled(DayStyle)<SelectedDateProps>`
-  gap: 5px;
-  background-color: ${({ selected }) => (selected ? "red" : "transparent")};
-`;
-
-const HandleNull = styled.div`
-  width: 9px;
-`;
