@@ -21,9 +21,7 @@ const Home: NextPage = () => {
 
   const [selectedDate, setSelectedDate] = useState(new Date().getDate());
   const selectedTodoStore = useTodoListStore({ wantedDate: selectedDate });
-  console.log(
-    `index.tsx에서 useTodoListStore를 호출하고 있으므로 최상위 컴포넌트가 재렌더링`
-  );
+
   return (
     <>
       <NavWrapper>

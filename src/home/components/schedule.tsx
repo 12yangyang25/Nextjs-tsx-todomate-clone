@@ -1,12 +1,12 @@
 import { faCaretSquareDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
-import { TodoType } from "../../model/list-type";
+import { TodoType, DateArray } from "../../model/list-type";
 import useTodoListStore from "./useTodoListStore";
 import scheduleStyle from "./style/scheduleStyle";
+import getDaysArray from "./style/getCalendar";
 
 const week: string[] = ["일", "월", "화", "수", "목", "금", "토"];
-type DateArray = { date: number; day: number };
 
 type ScheduleProps = {
   undoneTask: number;
@@ -100,6 +100,16 @@ export default function Schedule({
 //     stateStore[treelevel].clear();
 //   }
 
+{
+  /* <Schedule
+            undoneTask={todoCount}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+            selectedTodoStore={selectedTodoStore}
+            key={`date-${selectedDate}`}
+          /> */
+}
+
 //   if (callerComponent.key) {
 //     const savedState = stateStore[callerComponet.key + comopnentOrder];
 //     if (savedState) {
@@ -163,71 +173,7 @@ function DayPresenter({
   );
 }
 
-function getDaysArray(
-  weeklyFlag: boolean,
-  curDay: number,
-  curYear: number,
-  curMonth: number
-) {
-  const LastDate = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; //매달 마지막 날
-
-  let dateList: DateArray[] = [];
-
-  let setdate = new Date();
-  if (!weeklyFlag) {
-    setdate = new Date(curYear, curMonth - 1, 0);
-  }
-
-  if (weeklyFlag) {
-    //주차별 배열 생성
-    dateList.push({ date: setdate.getDate(), day: setdate.getDay() });
-
-    fillDays(setdate, dateList, curDay, false);
-
-    setdate = new Date();
-
-    for (var i = 6; i > curDay; i--) {
-      setdate.setDate(setdate.getDate() + 1);
-      dateList.push({ date: setdate.getDate(), day: setdate.getDay() });
-    }
-  } else {
-    //월별 배열 생성
-    fillDays(setdate, dateList, LastDate[curMonth], true);
-
-    let firstDay = dateList[0].day;
-    let lastDay = dateList[LastDate[curMonth] - 1].day;
-
-    for (i = 0; i < firstDay; i++) {
-      dateList.unshift({ date: -1, day: -1 });
-    }
-    for (i = lastDay; i < 6; i++) {
-      dateList.push({ date: -1, day: -1 });
-    }
-  }
-  return dateList;
-}
-
 function getUndoneTask(todoList: TodoType[] | undefined) {
   if (todoList === undefined) return 0;
   return todoList.filter((todo) => !todo.done).length;
-}
-
-function fillDays(
-  baseDate: Date,
-  daysArray: DateArray[],
-  numDays: number,
-  isMonth: boolean
-) {
-  for (let i = 0; i < numDays; i++) {
-    baseDate.setDate(baseDate.getDate() + (isMonth ? 1 : -1));
-    let newDate = {
-      date: baseDate.getDate(),
-      day: baseDate.getDay(),
-    };
-    if (isMonth) {
-      daysArray.push(newDate);
-    } else {
-      daysArray.unshift(newDate);
-    }
-  }
 }
